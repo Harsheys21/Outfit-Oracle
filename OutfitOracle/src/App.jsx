@@ -7,7 +7,9 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+
 import Upload from "./components/Upload";
+import Weather from "./components/Weather";
 
 const theme = createTheme({
   typography: {
@@ -70,10 +72,20 @@ function App() {
         </AppBar>
 
 
-        {/* Page Routes */}
-        <Routes>
-          <Route path="/" element={<Upload />} />
-        </Routes>
+        {/* Content layout */}
+        <div style={{ display: "flex", marginTop: "64px" }}>
+          {/* Weather on the left */}
+          <div style={{ flex: "0 0 300px", borderRight: "1px solid #ccc" }}>
+            <Weather />
+          </div>
+
+          {/* Main content */}
+          <div style={{ flex: "1", padding: "16px" }}>
+            <Routes>
+              <Route path="/" element={<Upload />} />
+            </Routes>
+          </div>
+        </div>
       </BrowserRouter>
     </ThemeProvider>
   );
