@@ -2,7 +2,11 @@ import { useRef } from "react";
 import "./App.css";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Routes, Route, BrowserRouter } from "react-router";
+import { Routes, Route, BrowserRouter, Link } from "react-router-dom";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Upload from "./components/Upload";
 
 const theme = createTheme({
@@ -35,16 +39,43 @@ function App() {
   const contactRef = useRef(null);
 
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Upload />} />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        {/* Navigation Bar */}
+        <AppBar position="fixed">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Outfit Oracle
+            </Typography>
+            <Button color="inherit" component={Link} to="/">
+              Home
+            </Button>
+            <Button color="inherit" onClick={() => homeRef.current?.scrollIntoView({ behavior: "smooth" })}>
+              About
+            </Button>
+            <Button color="inherit" onClick={() => experienceRef.current?.scrollIntoView({ behavior: "smooth" })}>
+              Experience
+            </Button>
+            <Button color="inherit" onClick={() => projectsRef.current?.scrollIntoView({ behavior: "smooth" })}>
+              Projects
+            </Button>
+            <Button color="inherit" onClick={() => skillsRef.current?.scrollIntoView({ behavior: "smooth" })}>
+              Skills
+            </Button>
+            <Button color="inherit" onClick={() => contactRef.current?.scrollIntoView({ behavior: "smooth" })}>
+              Contact
+            </Button>
+          </Toolbar>
+        </AppBar>
+
+
+        {/* Page Routes */}
+        <Routes>
+          <Route path="/" element={<Upload />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
