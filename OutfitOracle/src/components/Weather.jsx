@@ -46,6 +46,8 @@ const Weather = () => {
       <p><strong>Location:</strong> {weather.location.name}</p>
       <p><strong>Temperature:</strong> {weather.current.temp_c}°C</p>
       <p><strong>Condition:</strong> {weather.current.condition.text}</p>
+      {/* Display the weather icon */}
+      <img src={weather.current.condition.icon} alt="Weather icon" style={{ width: "50px", height: "50px" }} />
     </div>
   );
 };
