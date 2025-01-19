@@ -33,7 +33,7 @@ const Upload = () => {
         });
     }
 
-    const groq = new Groq({ apiKey: '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', dangerouslyAllowBrowser: true });
+    const groq = new Groq({ apiKey: '', dangerouslyAllowBrowser: true });
     async function getDescription(image) {
         const base64_image = await convertToBase64(image);
         console.log(base64_image);
