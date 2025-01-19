@@ -6,7 +6,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await fetch("http://localhost:5000/api/data", {
+    const result = await fetch("http://localhost:5050/api/publish", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data: inputData }),
