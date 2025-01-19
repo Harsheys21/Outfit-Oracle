@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { Button, Card, CardContent, Typography, Grid2, Box } from "@mui/material";
+import groq from "Groq";
+import Groq from "groq-sdk";
+
+
 
 const Upload = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [descriptions, setDescriptions] = useState([]); // State to hold image descriptions
+    const [base64Image, setBase64Image] = useState(null);
 
     // Function to handle image removal
     const handleRemove = (index) => {
@@ -12,23 +17,64 @@ const Upload = () => {
         setDescriptions((prevDescriptions) => prevDescriptions.filter((_, i) => i !== index));
     };
 
-    // Placeholder function to fetch descriptions
-    const fetchDescriptions = async (images) => {
-        // Simulate an API call
-        return images.map((_, index) => `Description for image ${index + 1}`);
-    };
+    function convertToBase64(image) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+      
+          reader.onload = () => {
+            resolve(reader.result); // Resolve the promise with the Base64 string
+          };
+      
+          reader.onerror = (error) => {
+            reject(error); // Reject the promise in case of an error
+          };
+      
+          reader.readAsDataURL(image); // Read the file as a Base64 string
+        });
+    }
 
-    // const fetchDescriptions = async (images) => {
-    //     const formData = new FormData();
-    //     images.forEach((image) => formData.append("images", image));
-    
-    //     const response = await fetch("YOUR_API_ENDPOINT", {
-    //         method: "POST",
-    //         body: formData,
-    //     });
-    //     const data = await response.json();
-    //     return data.descriptions; // Adjust this based on your API response format
-    // };
+    const groq = new Groq({ apiKey: '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', dangerouslyAllowBrowser: true });
+    async function getDescription(image) {
+        const base64_image = await convertToBase64(image);
+        console.log(base64_image);
+        const chatCompletion = await groq.chat.completions.create({
+            "messages": [
+            {
+                "role": "user",
+                "content": [
+                {
+                    "type": "text",
+                    "text": "Please describe the outfits in the image in detail."
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                    "url": `${base64_image}`,
+                    // "url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/LPU-v1-die.jpg"
+                    },
+                }
+                ]
+            }
+            ],
+            "model": "llama-3.2-11b-vision-preview",
+        });
+
+        console.log(chatCompletion.choices[0].message.content);
+        return chatCompletion.choices[0].message.content;
+    }
+
+    const fetchDescriptions = async (images) => {
+        let descriptions2 = [];
+        console.log(images);
+      
+        // Use map to create an array of promises
+        const descriptionPromises = images.map((image) => getDescription(image));
+      
+        // Wait for all promises to resolve
+        descriptions2 = await Promise.all(descriptionPromises);
+      
+        return descriptions2;
+    };
     
 
     // Handle "Get Descriptions" button click
